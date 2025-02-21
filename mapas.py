@@ -3,6 +3,8 @@ import json
 import sys
 import pandas as pd
 import os
+from folium.plugins import MarkerCluster
+
 
 # Cargar los datos de establecimientos
 
@@ -29,40 +31,32 @@ with open(geojson_path, encoding="utf-8") as f:
 # Crear el mapa centrado en la Región del Maule
 mapa_maule = folium.Map(location=[-35.4267, -71.6717], zoom_start=8)
 
-# Diccionario de colores para cada estado de operatividad
-estado_colores = {
-    "operativo": "green",
-    "semioperativo": "orange",
-    "inoperativo": "red"
-}
+# Paleta de colores oscuros más diferenciados
+colores_gris_oscuros = ["#101010", "#282828", "#404040", "#585858", "#707070", "#888888"]
+
+# Obtener todas las provincias y asignarles un color más distintivo
+provincias = sorted(set(feature["properties"]["PROVINCIA"] for feature in comunas_geojson["features"]))
+colores_provincias = {provincia: colores_gris_oscuros[i % len(colores_gris_oscuros)] for i, provincia in enumerate(provincias)}
 
 # Función para definir el color de cada comuna según la mayoría de sus establecimientos
 def definir_color_comuna(comuna_nombre):
     establecimientos = df[df["COMUNA"].str.upper() == comuna_nombre.upper()]
 
     if establecimientos.empty:
-        return "gray"  # No hay datos de establecimientos
+        return "#AAAAAA"  # Gris claro si no hay datos
 
     # Contar la cantidad de establecimientos en cada estado
     conteo_estados = establecimientos["operatividad_establecimiento"].value_counts()
 
-    # Verificar la mayoría
-    num_operativos = conteo_estados.get("operativo", 0)
-    num_semioperativos = conteo_estados.get("semioperativo", 0)
-    num_inoperativos = conteo_estados.get("inoperativo", 0)
+    # Si hay al menos un inoperativo, la comuna será negra
+    if conteo_estados.get("inoperativo", 0) > 0:
+        return "#ff0000"  # Rojo
+    elif conteo_estados.get("semioperativo", 0) > 0:
+        return "#ff9b00"  # naranja
+    else:
+        return "#05b100"  # Verde 
 
-    total_establecimientos = num_operativos + num_semioperativos + num_inoperativos
-
-    if num_inoperativos > num_operativos + num_semioperativos:
-        return "red"  # Mayoría inoperativo
-    elif num_semioperativos > 0 or (num_inoperativos > 0 and num_operativos > 0):
-        return "orange"  # Hay semioperativo o mezcla entre operativo/inoperativo
-    elif num_operativos == total_establecimientos:
-        return "green"  # Todos operativos
-
-    return "gray"
-
-# Agregar los polígonos de las comunas con su color correcto
+# Agregar los polígonos de las comunas con su color correcto y bordes más diferenciados
 for feature in comunas_geojson["features"]:
     comuna_nombre = feature["properties"]["COMUNA"]
     provincia_nombre = feature["properties"]["PROVINCIA"]
@@ -71,35 +65,46 @@ for feature in comunas_geojson["features"]:
     color_comuna = definir_color_comuna(comuna_nombre)
     feature["properties"]["color"] = color_comuna  # Guardamos el color en las propiedades
 
+    # Color del borde de la provincia (más diferenciados)
+    color_borde = colores_provincias[provincia_nombre]
+
     folium.GeoJson(
         feature,
         name=comuna_nombre,
-        style_function=lambda x: {
-            "fillColor": x["properties"]["color"],  # Tomamos el color desde las propiedades
-            "color": "black",
-            "weight": 1,
+        style_function=lambda x, borde=color_borde: {
+            "fillColor": x["properties"]["color"],  # Color de la comuna según operatividad
+            "color": borde,  # Color del borde de la provincia (más variado)
+            "weight": 3.5,  # Borde más grueso para distinguir provincias
             "fillOpacity": 0.6
         },
         highlight_function=lambda x: {
-            "fillColor": "lightblue",
-            "color": "black",
-            "weight": 3,
-            "fillOpacity": 0.8
+            "fillColor": "#DDDDDD",  # Gris más claro al resaltar
+            "color": "white",
+            "weight": 4,
+            "fillOpacity": 0.9
         },
         tooltip=f"{comuna_nombre} - {provincia_nombre}"
     ).add_to(mapa_maule)
 
-# Función para obtener el color del marcador de los establecimientos
-def definir_color_marcador(estado):
-    return estado_colores.get(estado.lower(), "gray")  # Convertimos a minúsculas por seguridad
+# Crear un grupo de marcadores con agrupamiento dinámico
+cluster_marcadores = MarkerCluster().add_to(mapa_maule)
 
-# Agregar marcadores de centros de salud
+# Agregar marcadores de establecimientos con colores estándar
 for _, row in df.iterrows():
+    estado = row["operatividad_establecimiento"]
+
+    if estado == "inoperativo":
+        color_icono = "red"
+    elif estado == "semioperativo":
+        color_icono = "orange"
+    else:
+        color_icono = "green"
+
     folium.Marker(
         location=[row["latitud_establecimiento"], row["longitud_establecimiento"]],
-        popup=f"{row['NOMBRE_ESTABLECIMIENTO']} ({row['operatividad_establecimiento']})",
-        icon=folium.Icon(color=definir_color_marcador(row["operatividad_establecimiento"]))
-    ).add_to(mapa_maule)
+        popup=f"{row['NOMBRE_ESTABLECIMIENTO']} ({estado})",
+        icon=folium.Icon(color=color_icono)
+    ).add_to(cluster_marcadores)
 
 # Agregar control de capas
 folium.LayerControl().add_to(mapa_maule)
