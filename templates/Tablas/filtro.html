@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filtro</title>
+    <link rel="stylesheet" href="static\css\header.css">
+    <link rel="stylesheet" href="static/css/tablas.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="menu-wrapper">
+                <button class="menu-button" onclick="toggleMenu()">Menú</button>
+                <div id="menu-content" class="menu-content">
+                    <a href="/">Inicio</a>
+                    <a href="/subida">Tablas</a>
+                    <a href="/mapa">Mapa</a>
+                    <a href="/chart">Graficos</a>
+                </div>
+            </div>
+            <div class="logo">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLFLZ6vwitDYKIRg1VrBWdZ3gjevCzeD3wag&s" alt="Logo">
+            </div>
+            <h1>Servicio de Salud Maule</h1>
+            <hr class="divider">
+        </header>
+    
+        <div class="container mt-5">
+            <h1>Filtro de datos</h1>
+            <hr class="divider">
+
+            <div class="row mt-4">
+                <div class="selectores">
+                    <div class="selector">
+                        <label for="column-selector">Selecciona Columna</label>
+                        <select id="column-selector" class="form-control">
+                            <option value="">-- Selecciona una columna --</option>
+                            {% for col in columnas %}
+                                <option value="{{ col }}">{{ col }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="selector">
+                        <label for="value-selector">Selecciona Valor</label>
+                        <select id="value-selector" class="form-control">
+                            <option value="">-- Selecciona un valor --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-12 mt-4">
+                    <label for="column-dropdown">Selecciona Columnas a Mostrar</label>
+                    <button type="button" id="select-all-columns" class="btn btn-sm btn-info mb-2">Seleccionar Todas</button>
+                    <button type="button" id="deselect-all-columns" class="btn btn-sm btn-secondary mb-2">Deseleccionar Todas</button>
+                    <div id="column-dropdown" class="dropdown">
+                        <div class="dropdown-menu p-3" aria-labelledby="dropdownMenuButton" style="max-height: 300px; overflow-y: auto;">
+                            
+                            <div id="checkbox-list">
+                                {% for col in columnas %}
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="column-checkbox" value="{{ col }}" id="checkbox-{{ col }}" checked>
+                                        <label class="form-check-label" for="checkbox-{{ col }}">
+                                            {{ col }}
+                                        </label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 d-flex align-items-end mt-4">
+                    <button id="filter-button" class="btn btn-success mr-2">Filtrar</button>
+                    <button type="button" id="reset-filters-btn" class="btn btn-secondary mx-2">Resetear Filtros</button>
+                    <button id="download-filtered" class="btn btn-primary">Descargar Datos Filtrados</button>
+                </div>
+            </div>
+
+            <div class="row mt-4">
+                <div class="col-md-12">
+                    <h3>Tabla de Datos</h3>
+                    <div id="tabla-datos" class="table-responsive">
+                        <table class="data-table table">
+                            <tbody>
+                                <!-- La tabla se cargará aquí -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script src="{{ url_for('static', filename='js/scripts_tablas.js') }}"></script>
+        <script>
+            function toggleMenu() {
+                $('#menu-content').toggle(); // Cambia la visibilidad del menú
+            };
+        </script>
+    </div>
+</body>
+</html>

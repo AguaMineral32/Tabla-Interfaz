@@ -1,0 +1,82 @@
+/* Estilo general para el fondo de la página */
+body {
+    background-color: #f0f4f7 !important; /* Fondo gris suave */
+    margin: 0 !important;
+    font-family: Arial, sans-serif !important; /* Fuente general */
+    color: #333 !important; /* Color de texto general */
+}
+
+/* Estilo para el contenedor principal */
+.container {
+    box-sizing: content-box !important;
+    background-color: #f0f4f7 !important; /* Fondo gris para mantener consistencia */
+    max-width: 1200px !important; /* Ancho del contenedor */
+    margin: 0 auto !important;
+    padding: 20px !important; /* Aumentar el relleno */
+}
+
+/* Estilo para el área del encabezado */
+.header {
+    display: flex !important;
+    align-items: center !important; /* Alinea verticalmente los elementos */
+    justify-content: space-between !important; /* Espacia los elementos a los extremos */
+    padding: 10px 20px !important; /* Espacio interno del encabezado */
+    border-bottom: 2px solid #004d99 !important; /* Línea de separación debajo del encabezado */
+    background-color: #ffffff !important; /* Fondo blanco para el encabezado */
+    position: relative !important; /* Asegura que los elementos posicionados absolutamente estén relativos a este contenedor */
+}
+
+.logo img {
+    width: 50px !important;
+    height: 50px !important;
+}
+
+/* Estilo para el botón del menú */
+.menu-button {
+    background-color: #004d99 !important; /* Fondo del botón */
+    color: #fff !important; /* Color del texto del botón */
+    border: none !important; /* Elimina el borde del botón */
+    padding: 10px 20px !important; /* Espacio dentro del botón */
+    cursor: pointer !important; /* Cambia el cursor al pasar sobre el botón */
+    font-size: 16px !important; /* Tamaño del texto del botón */
+    text-align: left !important; /* Alinea el texto a la izquierda */
+    border-radius: 5px !important; /* Bordes redondeados */
+    position: absolute !important; /* Posiciona el botón de manera absoluta */
+    top: 48% !important; /* Centro vertical */
+    right: 20px !important; /* Espacio desde el borde derecho */
+    transform: translateY(-50%) !important; /* Ajusta el botón verticalmente para centrarlo */
+}
+
+/* Estilo para el contenido del menú */
+.menu-content {
+    display: none; /* Oculta el contenido del menú por defecto */
+    background-color: #004d99 !important; /* Fondo del menú */
+    position: absolute !important; /* Posiciona el menú desplegable */
+    top: calc(50% + 25px) !important; /* Coloca el menú justo debajo del botón */
+    right: 20px !important; /* Alinea el menú con el borde derecho del botón */
+    width: 150px !important; /* Ancho fijo para el menú */
+    z-index: 1000 !important; /* Asegura que el menú esté encima de otros elementos */
+    border-radius: 5px !important; /* Bordes redondeados */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1) !important; /* Sombra del menú */
+}
+
+/* Estilo para los enlaces dentro del menú desplegable */
+.menu-content a {
+    display: block !important; /* Hace que los enlaces se comporten como bloques */
+    color: #fff !important; /* Color del texto */
+    padding: 10px !important; /* Espacio dentro de los enlaces */
+    text-decoration: none  !important; /* Elimina el subrayado */
+}
+
+/* Color de fondo al pasar el ratón sobre los enlaces */
+.menu-content a:hover {
+    background-color: #007599 !important; /* Color de fondo al pasar el ratón */
+}
+
+/* Estilo para la línea de separación */
+.divider {
+    flex-grow: 1 !important; /* Hace que la línea de separación ocupe el espacio restante */
+    border: none !important; /* Elimina el borde predeterminado */
+    border-top: 1px solid #004d99 !important; /* Agrega una línea de separación verde */
+    margin-left: 20px !important; /* Espacio entre el título y la línea de separación */
+}

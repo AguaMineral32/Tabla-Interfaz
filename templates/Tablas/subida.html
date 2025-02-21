@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subir Archivos</title>
+    <link rel="stylesheet" href="static/css/header.css">
+    <link rel="stylesheet" href="static/css/tablas.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="menu-wrapper">
+                <button class="menu-button" onclick="toggleMenu()">Menú</button>
+                <div id="menu-content" class="menu-content">
+                    <a href="/">Inicio</a>
+                    <a href="/subida">Tablas</a>
+                    <a href="/mapa">Mapa</a>
+                    <a href="/chart">Gráficos</a>
+                </div>
+            </div>
+            <div class="logo">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLFLZ6vwitDYKIRg1VrBWdZ3gjevCzeD3wag&s" alt="Logo">
+            </div>
+            <h1>Servicio de Salud Maule</h1>
+            <hr class="divider">
+        </header>
+        <main>
+            <form id="uploadForm" action="/upload" method="post" enctype="multipart/form-data">
+                <label class="btn custom-file-upload" for="files">Elegir Archivos</label>
+                <input type="file" id="files" name="files[]" multiple accept=".xlsx, .xls">
+                <div class="time-filters">
+                <div class="time-input">
+                    <label for="horaInicio">Hora de inicio:</label>
+                    <input type="number" id="horaInicio" name="horaInicio" min="0" max="23" value="0">
+                </div>
+                <div class="time-input">
+                    <label for="horaFin">Hora de fin:</label>
+                    <input type="number" id="horaFin" name="horaFin" min="0" max="23" value="23">
+                </div>
+                </div>
+                <button class="btn btn-primary" type="submit" id="submitBtn">Subir y Procesar</button>
+                <a id="filtroButton" href="/filtro" class="btn btn-secondary" style="display: none;">Ir al Filtro</a>
+            </form>
+
+            <div id="file-names" class="file-names"></div>
+
+            <div id="alert-container"></div> <!-- Contenedor para las alertas -->
+            <div id="resultados"></div>
+            <div id="resultados1"></div>
+
+            <!-- Contenedor para mostrar la tabla -->
+            <div id="tabla-container" style="display: none; margin-top: 20px;">
+                <button id="volverPrincipal" class="btn btn-secondary" style="display: none; margin-bottom: 10px;">Volver a Tabla Principal</button>
+                <div id="tabla-resultados" style="display: none;">
+                    <table class="table">
+                        <!-- Tabla -->
+                    </table>
+                </div>
+            </div>
+
+        </main>
+        <style>
+            .time-filters {
+                margin: 15px 0;
+                display: flex;
+                gap: 20px;
+            }
+            .time-input {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+            }
+            .time-input input {
+                width: 70px;
+                padding: 5px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+            </style>
+        <script>
+            const form = document.getElementById('uploadForm');
+            const fileInput = document.getElementById('files');
+            const fileNamesContainer = document.getElementById('file-names');
+            const tablaContainer = document.getElementById('tabla-container');
+            const tablaResultados = document.getElementById('tabla-resultados');
+            let tablaActual = null;
+            let ultimaTabla = null;
+            let tablasPrincipales = [];
+
+            async function obtenerTabla(tableName) {
+                try {
+                    const response = await fetch(`/get_table?table_name=${encodeURIComponent(tableName)}`);
+                    const result = await response.json();
+
+                    if (response.ok) {
+                        const volverPrincipal = document.getElementById('volverPrincipal');
+                        const tablaResultados = document.getElementById('tabla-resultados');
+                        tablaResultados.innerHTML = result.table;
+                        tablaActual = tableName; // tabla actual
+                        // tablasPrincipales = ['principalOperatividad', 'principalAfectacionC'];
+
+                        if (!tablasPrincipales.includes(tablaActual)){
+                            volverPrincipal.style.display = 'inline-block';
+
+                            botonesCreados.forEach((btn) => {
+                                btn.style.display = 'none';
+                            });
+                        }
+
+                        ultimaTabla = tablasPrincipales.includes(tablaActual) ? tablaActual : ultimaTabla;
+
+                    } else {
+                        showAlert(result.error || 'Error al obtener la tabla.', 'danger');
+                    }
+                } catch (err) {
+                    // showAlert('Ocurrió un error al intentar obtener la tabla.', 'danger');
+                }
+            }
+
+            async function crearBotonesTablas() {
+    const tablaResultados = document.getElementById('tabla-resultados');
+    // Asegurarse de que el contenedor se muestre y limpiar su contenido previo
+    tablaResultados.style.display = 'block';
+    tablaResultados.innerHTML = '';
+
+    // Recorrer cada nombre de tabla
+    for (const tablaName of tablasPrincipales) {
+        try {
+            const response = await fetch(`/get_table?table_name=${encodeURIComponent(tablaName)}`);
+            const result = await response.json();
+
+            if (response.ok) {
+                // Crear un contenedor para esta tabla
+                const tablaDiv = document.createElement('div');
+                tablaDiv.className = 'tabla-individual';
+
+                // Eliminar la palabra 'principal' del nombre de la tabla
+                const nombreSinPrincipal = tablaName.replace('principal', '').trim();
+
+                // Agregar un título para identificar la tabla
+                const titulo = document.createElement('h3');
+                titulo.innerText = `${nombreSinPrincipal}`;
+                tablaDiv.appendChild(titulo);
+
+                // Agregar el contenido de la tabla (se asume que result.table contiene HTML válido)
+                const contenidoTabla = document.createElement('div');
+                contenidoTabla.innerHTML = result.table;
+                tablaDiv.appendChild(contenidoTabla);
+
+                // Agregar este contenedor al div principal donde se acumulan las tablas
+                tablaResultados.appendChild(tablaDiv);
+            } else {
+                showAlert(result.error || `Error al obtener la tabla ${tablaName}`, 'danger');
+            }
+        } catch (error) {
+            showAlert(`Error al obtener la tabla ${tablaName}: ${error.message}`, 'danger');
+        }
+    }
+}
+
+            // Evento para volver a la tabla principal
+            document.getElementById('volverPrincipal').addEventListener('click', async () => {
+    // Llamamos a la función que reconstruye todas las tablas en el contenedor
+    await crearBotonesTablas();
+    // Ocultamos el botón "Volver a Tabla Principal"
+    document.getElementById('volverPrincipal').style.display = 'none';
+});
+
+            // Evento para mostrar la tabla después de la carga del archivo
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const formData = new FormData(form);
+                const submitBtn = document.getElementById("submitBtn");
+                const horaInicio = document.getElementById('horaInicio').value;
+                const horaFin = document.getElementById('horaFin').value;
+                formData.append('horaInicio', horaInicio);
+                formData.append('horaFin', horaFin);
+                try {
+                    submitBtn.disabled = true;
+                    const response = await fetch('/upload', {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    const result = await response.json();
+                    let data = result;
+
+                    if (response.ok) {
+                        showAlert(result.message || 'Archivo subido correctamente.', 'success');
+                        filtroButton.style.display = 'inline-block';
+                        mostrarEventos(data.eventos);
+                        mostrarCodigo(data.codigo_eventos)
+
+                        if (result.tablaContainer) {
+                            tablaContainer.style.display = 'block';
+                            obtenerTabla(ultimaTabla);
+                        } else {
+                            tablaContainer.style.display = 'none';
+                        }
+
+                        result.tablasPrincipales.forEach(valor => {
+                            tablasPrincipales.push(valor);
+                        });
+
+                        crearBotonesTablas();
+                        submitBtn.disabled = false;
+                        
+                    } else {
+                        showAlert(result.error || 'Error al subir el archivo.', 'danger');
+                        tablaContainer.style.display = 'none';
+                    }
+                } catch (err) {
+                    showAlert('Ocurrió un error inesperado.', 'danger');
+                    tablaContainer.style.display = 'none';
+                }
+            });
+
+            function mostrarEventos(eventos) {
+    let contenedor = document.getElementById("resultados");
+    contenedor.innerHTML = ""; // Limpia el contenido previo
+
+    if (!eventos || eventos.length === 0) {
+        contenedor.innerHTML = "<p>No hay eventos disponibles.</p>";
+        return;
+    }
+
+    let cuadro = document.createElement("div");
+    cuadro.style.border = "1px solid #000";
+    cuadro.style.padding = "10px";
+    cuadro.style.margin = "10px";
+    cuadro.style.backgroundColor = "#f9f9f9";
+
+    let titulo = document.createElement("h3");
+    titulo.textContent = "Eventos:";
+    cuadro.appendChild(titulo);
+
+    let lista = document.createElement("ul");
+    eventos.forEach(evento => {
+        let item = document.createElement("li");
+        item.textContent = evento;
+        lista.appendChild(item);
+    });
+
+    cuadro.appendChild(lista);
+    contenedor.appendChild(cuadro);
+}
+            function mostrarCodigo(codigo_eventos) {
+                let contenedor = document.getElementById("resultados1");
+                contenedor.innerHTML = ""; // Limpia el contenido previo
+
+                if (!codigo_eventos || codigo_eventos.length === 0) {
+                    contenedor.innerHTML = "<p>No hay eventos disponibles.</p>";
+                    return;
+                }
+
+                let cuadro = document.createElement("div");
+                cuadro.style.border = "1px solid #000";
+                cuadro.style.padding = "10px";
+                cuadro.style.margin = "10px";
+                cuadro.style.backgroundColor = "#f9f9f9";
+
+                let titulo = document.createElement("h3");
+                titulo.textContent = "Codigo Evento:";
+                cuadro.appendChild(titulo);
+
+                let lista = document.createElement("ul");
+                codigo_eventos.forEach(evento => {  // Cambié "eventos" por "codigo_eventos"
+                    let item = document.createElement("li");
+                    item.textContent = evento;
+                    lista.appendChild(item);
+                });
+
+                cuadro.appendChild(lista);
+                contenedor.appendChild(cuadro);
+            }
+
+            // Evento delegado para detectar clics en las celdas
+            document.getElementById('tabla-resultados').addEventListener('click', async (e) => {
+                if (e.target.tagName === 'TD' && e.target.innerText !== '0') {
+                    const row = e.target.parentElement;
+                    const tipoEstablecimiento = row.children[0].innerText;
+                    const operatividad = e.target.closest('table').querySelector(`th:nth-child(${e.target.cellIndex + 1})`).innerText;
+
+                    const tableName = `${tipoEstablecimiento}_${operatividad}`.toUpperCase();
+                    obtenerTabla(tableName);
+                }
+            });
+
+            fileInput.addEventListener('change', () => {
+                const files = fileInput.files;
+
+                // Verifica si se ha seleccionado más de un archivo
+                if (files.length > 1) {
+                    showAlert('Solo se puede subir un archivo.', 'danger');
+                    fileInput.value = '';  // Resetea la selección de archivos
+                    fileNamesContainer.innerHTML = ''; // Limpia la lista de archivos
+                } else if (files.length > 0) {
+                    const fileNames = Array.from(files)
+                        .map(file => `<li>${file.name}</li>`)
+                        .join('');
+                    fileNamesContainer.innerHTML = `
+                        <p><strong>Archivo seleccionado:</strong></p>
+                        <ul>${fileNames}</ul>
+                    `;
+                } else {
+                    fileNamesContainer.innerHTML = '';
+                }
+            });
+
+            // Función para mostrar alertas
+            function showAlert(message, type = 'success') {
+                $('#alert-container').html(
+                    `<div class="alert alert-${type} alert-dismissible fade show" role="alert">
+                        ${message}
+                        <button type="button" class="close" aria-label="Cerrar">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>`
+                );
+
+                $('.alert .close').on('click', function() {
+                    const alertElement = $(this).closest('.alert');
+                    alertElement.addClass('hide');
+                    setTimeout(() => {
+                        alertElement.remove();
+                    }, 500);
+                });
+            }
+
+            function toggleMenu() {
+                $('#menu-content').toggle(); // Cambia la visibilidad del menú
+            }
+
+        </script>
+    </div>
+</body>
+</html>

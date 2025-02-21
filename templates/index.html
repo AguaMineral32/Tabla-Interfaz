@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servicio de Salud Maule - Inicio</title>
+    <link rel="stylesheet" href="static\css\index.css">
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLFLZ6vwitDYKIRg1VrBWdZ3gjevCzeD3wag&s" alt="Logo">
+            </div>
+            <nav>
+                <a href="/" class="tool-button">Inicio</a>
+                <a href="/mapa" class="tool-button">Mapa</a>
+                <a href="/subida" class="tool-button">Tablas</a>
+                <a href="/chart" class="tool-button">Gráficos</a>
+                <a href="/changelog" class="tool-button">Historial de Cambios</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Sección Hero con cambio de fondo dinámico -->
+    <section class="hero" id="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1>Bienvenido al Servicio de Salud Maule</h1>
+            <p>Soluciones de salud innovadoras para la región del Maule. Explora mapas interactivos, tablas de datos y gráficos informativos.</p>
+            <button class="btn" onclick="location.href='changelog.html'">Ver Historial de Cambios</button>
+        </div>
+    </section>
+
+    <!-- Sección de características -->
+    <section class="tools">
+        <h2>Nuestras Herramientas</h2>
+        <div class="tool-container">
+            <div class="tool-card">
+                <h3>Mapa</h3>
+                <p>Visualiza los datos de salud en un mapa interactivo. Haz clic para explorar información geográfica relevante.</p>
+                <a href="Mapa.html" class="tool-button">Ir al Mapa</a>
+            </div>
+            <div class="tool-card">
+                <h3>Tablas</h3>
+                <p>Accede a tablas con datos detallados. Filtra y ordena la información para un análisis más profundo.</p>
+                <a href="http://127.0.0.1:5000/subida" class="tool-button">Ir a Tablas</a>
+            </div>
+            <div class="tool-card">
+                <h3>Gráficos</h3>
+                <p>Crea gráficos visuales para entender mejor los datos. Selecciona el tipo de gráfico que desees generar.</p>
+                <a href="chart.html" class="tool-button">Ir a Gráficos</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sección de Historial de Cambios -->
+    <section class="changelog">
+        <h2>Historial de Cambios</h2>
+        <div class="changelog-container">
+            <div class="changelog-item">
+                <h3>Actualización de Octubre 2024</h3>
+                <p>Se añadió la nueva funcionalidad de gráficos dinámicos y se mejoraron las tablas interactivas.</p>
+            </div>
+            <div class="changelog-item">
+                <h3>Actualización de Septiembre 2024</h3>
+                <p>Mejoras en el mapa interactivo con nuevas capas de datos regionales.</p>
+            </div>
+            <div class="changelog-item">
+                <h3>Actualización de Agosto 2024</h3>
+                <p>Optimizaciones en la carga de datos y nuevas provincias añadidas.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pie de página -->
+    <footer>
+        <p>&copy; 2024 Servicio de Salud Maule. Todos los derechos reservados.</p>
+        <p>
+            <a href="#">Facebook</a> | 
+            <a href="#">Twitter</a> | 
+            <a href="#">Instagram</a>
+        </p>
+    </footer>
+
+    <!-- JavaScript para cambiar el fondo -->
+    <script>
+        const backgrounds = [
+            'url("https://luisvidal.com/wp-content/uploads/HCN_E_F02_Sur_v7F.jpg")',
+            'url("https://chileestuyo.cl/wp-content/uploads/2020/09/shutterstock_1062783575-scaled.jpg")',
+            'url("https://dynamic-media-cdn.tripadvisor.com/media/photo-o/0a/15/37/b4/linares.jpg?w=1200&h=900&s=1")',
+            'url("https://www.certificacionsustentable.cl/wp-content/uploads/2024/08/HOSPITAL-CAUQUENES-1024x576-1.png")'
+        ];
+
+        let currentBackground = 0;
+
+        function changeBackground() {
+            const hero = document.getElementById('hero');
+            hero.style.backgroundImage = backgrounds[currentBackground];
+            currentBackground = (currentBackground + 1) % backgrounds.length;
+        }
+
+        setInterval(changeBackground, 5000); // Cambia el fondo cada 5 segundos
+    </script>
+</body>
+</html>

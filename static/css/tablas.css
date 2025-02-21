@@ -1,0 +1,370 @@
+.btn {
+  text-decoration: none;
+  display: inline-block;
+  font-weight: 400;
+  text-align: center;
+  white-space: nowrap;
+  vertical-align: middle;
+  user-select: none;
+  border: 1px solid transparent;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  border-radius: 0.25rem;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  /* transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out; */
+}
+
+.btn:hover {
+  background-color: #0056b3; /* Color al pasar el ratón para botones */
+  transform: scale(1.05); /* Aumentar ligeramente el tamaño al pasar el ratón */
+}
+
+.btn-primary {
+  color: #fff;
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-primary:hover {
+  color: #fff;
+  background-color: #0056b3;
+  border-color: #004085;
+}
+
+.btn-secondary {
+  color: #fff;
+  background-color: #6c757d;
+  border-color: #6c757d;
+  /* margin: 10px; */
+}
+
+.btn-secondary:hover {
+  color: #fff;
+  background-color: #5a6268;
+  border-color: #545b62;
+}
+
+.btn-success {
+  color: #fff;
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.btn-success:hover {
+  color: #fff;
+  background-color: #218838;
+  border-color: #1e7e34;
+}
+
+/* Estilo para el botón de filtro */
+#filter-button {
+  background-color: #28a745; /* Color de fondo */
+  color: white; /* Color del texto */
+  margin: 0px 0px 0px 0px; /* Espaciado a la derecha del botón "Filtrar" */
+}
+
+/* Estilo para el botón de resetear filtros */
+#reset-filters-btn {
+  background-color: #6c757d; /* Color de fondo */
+  color: white; /* Color del texto */
+  margin: 10px; /* Espaciado horizontal para el botón "Resetear Filtros" */
+}
+
+/* -------------------------------------------------------------------------------------------------------------- */
+
+/* Estilos para selects */
+.form-control {
+  display: block;
+  width: 100%;
+  padding: 0.375rem 0.75rem;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #495057;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid #ced4da;
+  border-radius: 0.25rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-control:focus {
+  color: #495057;
+  background-color: #fff;
+  border-color: #80bdff;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.selectores {
+  display: flex;
+  justify-content: left;
+  position: relative;
+  gap: 10px;
+}
+
+.selector {
+  display: flex;
+  flex-direction: column; /* Asegura que el label esté encima del select */
+  width: 100%; /* Ajusta el ancho de cada selector */
+}
+
+/* -------------------------------------------------------------------------------------------------------------- */
+
+/* Estilos adicionales para la tabla */
+#tabla-datos {
+  max-width: 100%; /* Ancho máximo para la tabla */
+  max-height: 400px; /* Ajusta la altura máxima deseada */
+  overflow: scroll; /* Activar scroll */
+  border: 1px solid #ddd; /* Añadir borde para mejor visualización */
+  border-radius: 5px; /* Bordes redondeados */
+  background-color: #ffffff; /* Fondo blanco para la tabla */
+}
+
+/* (Este bloque original se conserva, pero será sobrescrito para #tabla-resultados) */
+#tabla-resultados {
+  max-width: 80%; /* Limitar el ancho máximo */
+  max-height: 400px; /* Limitar la altura máxima */
+  overflow: scroll; /* Activar scroll */
+  border: 1px solid #ddd; /* Borde de la tabla */
+  border-radius: 5px; /* Bordes redondeados */
+  margin: 20px auto; /* Centramos el contenedor */
+  background-color: #ffffff; /* Fondo blanco */
+  padding: 0px; /* Espacio interno para separar contenido del borde */
+}
+
+
+.table {
+  margin: 0; /* Quitar márgenes */
+  width: 100%; /* Ocupar todo el contenedor */
+  border-collapse: collapse; /* Quitar espacios entre celdas */
+}
+
+.table th,
+.table td {
+  padding: 12px; /* Espaciado interior */
+  text-align: left; /* Alinear texto a la izquierda */
+  border-bottom: 1px solid #ddd; /* Líneas separadoras */
+  transition: background-color 0.3s, transform 0.3s; /* Animaciones suaves */
+}
+
+.table th:hover,
+.table td:hover {
+  background-color: #f0f4f7; /* Cambiar color al pasar el ratón */
+  transform: scale(1.02); /* Aumentar tamaño ligeramente */
+}
+
+/* Títulos de la tabla */
+.table th {
+  background-color: #0078d4; /* Fondo azul */
+  color: #fff; /* Texto blanco */
+}
+
+/* Alternar colores de las filas */
+.table tr:nth-child(even) {
+  background-color: #f9f9f9; /* Fondo gris claro */
+}
+
+.table tr:nth-child(odd) {
+  background-color: #ffffff; /* Fondo blanco */
+}
+
+/* Hacer la primera fila sticky */
+#tabla-datos .table th,
+#tabla-resultados .table th {
+  position: sticky;
+  top: 0; /* Fija la fila en la parte superior */
+  z-index: 1; /* Asegura que esté por encima de las demás filas */
+}
+
+/* Hacer la primera columna sticky */
+/* #tabla-datos .table td:first-child,
+#tabla-datos .table th:first-child,
+#tabla-resultados .table td:first-child,
+#tabla-resultados .table th:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+} */
+
+/* -------------------------------------------------------------------------------------------------------------- */
+
+/* Pagina de subida */
+
+/* -------------------------------------------------------------------------------------------------------------- */
+
+#uploadForm {
+  margin: 10px 0px;
+}
+
+/* Estilo para el input de archivos */
+input[type="file"] {
+  display: none; /* Oculta el input original */
+}
+
+/* Estilo para el botón personalizado */
+.custom-file-upload {
+  background-color: #00796b; /* Color de fondo */
+  color: #fff; /* Color del texto */
+  cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+  transition: background-color 0.3s, transform 0.3s; /* Transiciones suaves */
+}
+
+/* Efecto hover para el botón de subir archivos */
+.custom-file-upload:hover {
+  background-color: #005f53; /* Color más oscuro al pasar */
+  transform: scale(1.05); /* Aumentar tamaño ligeramente */
+}
+
+/* Estilo para el contenedor de nombres de archivos */
+#file-names {
+  display: inline-block; /* Permite que esté en línea con el botón */
+  max-width: 300px; /* Ancho máximo para mantener la apariencia */
+  white-space: nowrap; /* Evita que los nombres se envuelvan */
+  overflow: hidden; /* Oculta el desbordamiento */
+  text-overflow: ellipsis; /* Agrega puntos suspensivos si hay desbordamiento */
+}
+
+/* -------------------------------------------------------------------------------------------------------------- */
+
+/* Estilo para las alertas */
+.alert {
+  opacity: 0; /* Comienza invisible */
+  transform: translateY(-20px); /* Desplazamiento inicial hacia arriba */
+  transition: opacity 0.5s ease, transform 0.5s ease; /* Transición suave */
+  border-radius: 5px !important; /* Bordes redondeados */
+  padding: 15px !important; /* Aumentar el espacio interior */
+  margin-bottom: 20px !important; /* Espacio debajo de cada alerta */
+  position: relative !important; /* Asegurar que el botón de cerrar esté posicionado correctamente */
+}
+
+/* Al mostrar la alerta */
+.alert.show {
+  opacity: 1; /* Totalmente visible */
+  transform: translateY(0); /* Regresa a la posición original */
+}
+
+/* Al cerrar la alerta (animación de desvanecimiento) */
+.alert.hide {
+  opacity: 0; /* Desaparece */
+  transform: translateY(-20px); /* Subir hacia arriba */
+  transition: opacity 0.5s ease, transform 0.5s ease; /* Transición suave */
+}
+
+/* Estilo para el botón de cerrar */
+.alert .close {
+  position: absolute !important; /* Posiciona el botón de cerrar */
+  top: 10px !important; /* Ajusta la posición superior */
+  right: 15px !important; /* Ajusta la posición derecha */
+  color: inherit !important; /* Mantiene el color de texto */
+}
+
+/* Colores específicos para cada tipo de alerta */
+.alert-success {
+  background-color: #d4edda !important; /* Fondo verde claro */
+  color: #155724 !important; /* Texto verde oscuro */
+  border: 1px solid #c3e6cb !important; /* Borde verde */
+}
+
+.alert-warning {
+  background-color: #fff3cd !important; /* Fondo amarillo claro */
+  color: #856404 !important; /* Texto amarillo oscuro */
+  border: 1px solid #ffeeba !important; /* Borde amarillo */
+}
+
+.alert-danger {
+  background-color: #f8d7da !important; /* Fondo rojo claro */
+  color: #721c24 !important; /* Texto rojo oscuro */
+  border: 1px solid #f5c6cb !important; /* Borde rojo */
+}
+
+/* -------------------------------------------------------------------------
+   NUEVOS ESTILOS PARA LAS TABLAS:
+   - Se distribuyen en dos columnas.
+   - Los contenedores (.tabla-individual) son más pequeños.
+   - Las tablas internas tienen fuente y padding reducidos y colores suaves.
+-------------------------------------------------------------------------- */
+
+
+/* Contenedor de la tabla sin scroll innecesario */
+.tabla-individual .table-wrapper {
+  flex-grow: 1;
+  overflow: hidden !important; /* Elimina scroll innecesario */
+  max-height: none !important;
+  width: 100%;
+  display: block;
+}
+
+/* Ajustes de la tabla para reducir tamaño */
+.tabla-individual table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  font-size: 0.7em !important; /* Reduce tamaño de fuente */
+  min-width: auto !important; /* Permite que la tabla se ajuste */
+  table-layout: fixed; /* Distribuye columnas de manera uniforme */
+}
+
+/* Ajustes en th y td para evitar exceso de espacio */
+.tabla-individual table th,
+.tabla-individual table td {
+  border: 1px solid #ccc !important;
+  padding: 4px !important; /* Reduce padding */
+  text-align: center !important;
+  white-space: normal !important; /* Permite saltos de línea */
+  word-wrap: break-word !important; /* Ajusta contenido dentro de celdas */
+}
+
+/* Ajustes en el div de la tabla para mejor adaptación */
+#tabla-resultados {
+  display: flex !important;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px !important;
+  max-width: 90%;
+  margin: 20px auto;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #ffffff;
+  max-height: none !important;
+  overflow: visible !important;
+}
+#tabla-resultados table {
+  width: 100%;  /* Asegura que la tabla ocupe el 100% del ancho disponible */
+  table-layout: fixed;  /* Las columnas se ajustan a un ancho fijo */
+  word-wrap: break-word;  /* Rompe las palabras largas para evitar que se desborden */
+  overflow-wrap: break-word;
+  max-width: 100%;  /* Asegura que la tabla no sobresalga del contenedor */
+  margin: 0 auto; /* Centra la tabla si es necesario */
+}
+
+#tabla-resultados table th, #tabla-resultados table td {
+  word-break: break-word;  /* Rompe las palabras largas en las celdas */
+  padding: 8px;  /* Espaciado dentro de las celdas */
+  border: 1px solid #ddd;  /* Borde sutil para las celdas */
+  text-align: center;  /* Alineación centrada */
+}
+
+/* Ajustar tamaño de las tablas sin scroll innecesario */
+.tabla-individual {
+  width: calc(33.33% - 10px) !important; /* Tres columnas */
+  height: auto !important; /* Ajusta altura automáticamente */
+  display: flex;
+  flex-direction: column;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  padding: 10px;
+  box-sizing: border-box;
+  background-color: #ffffff !important;
+  overflow: hidden !important;
+}
+
+/* Asegurar que la primera fila de encabezado quede fija */
+.tabla-individual .table thead th {
+  position: sticky;
+  top: 0;
+  background-color: #0078d4;
+  color: #fff;
+  z-index: 2;
+}

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial de Cambios - Servicio de Salud Maule</title>
+    <style>
+        /* Estilo general para el fondo de la página */
+        body {
+            background-color: #f0f4f7; /* Color de fondo más suave */
+            margin: 0; /* Elimina el margen por defecto */
+            font-family: Arial, sans-serif; /* Fuente general para la página */
+            color: #ffffff; /* Color del texto */
+            min-height: 100vh; /* Altura mínima para el body */
+            display: flex;
+            flex-direction: column; /* Para organizar el contenido en columna */
+            background-image: url('https://es.gizmodo.com/app/uploads/2021/06/71848cdce6f99d6595692940474ce31f.jpg'); /* URL de la imagen de fondo */
+        }
+
+        /* Estilo para el encabezado */
+        header {
+            background-color: #002673; /* Color del encabezado */
+            color: white; /* Color del texto */
+            padding: 20px 0; /* Espacio interior del encabezado */
+            text-align: center; /* Centra el texto */
+            position: relative; /* Para el menú desplegable */
+        }
+
+        /* Estilo para el menú */
+        .navbar {
+            position: absolute; /* Posiciona el contenedor del menú de manera absoluta */
+            right: 20px; /* Alinea el menú a la derecha */
+            top: 20px; /* Espacio desde el borde superior */
+        }
+
+        .menu-button {
+            background-color: #0056b3; /* Fondo del botón */
+            color: #fff; /* Color del texto */
+            border: none; /* Elimina el borde del botón */
+            padding: 10px 20px; /* Espacio dentro del botón */
+            cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+            font-size: 16px; /* Tamaño del texto */
+            border-radius: 5px; /* Bordes redondeados */
+        }
+
+        .menu-content {
+            display: none; /* Oculta el contenido del menú por defecto */
+            position: absolute; /* Posiciona el menú desplegable */
+            top: 50px; /* Coloca el menú debajo del botón */
+            right: 0; /* Alinea el menú a la derecha */
+            background-color: #002673; /* Fondo del menú */
+            border-radius: 5px; /* Bordes redondeados */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Sombra del menú */
+            z-index: 1000; /* Asegura que el menú esté encima de otros elementos */
+        }
+
+        .menu-content a {
+            display: block; /* Hace que los enlaces se comporten como bloques */
+            color: #fff; /* Color del texto */
+            padding: 10px; /* Espacio dentro de los enlaces */
+            text-decoration: none; /* Elimina el subrayado */
+        }
+
+        .menu-content a:hover {
+            background-color: #004080; /* Color de fondo al pasar el ratón */
+        }
+
+        /* Estilo para la sección de historial de cambios */
+        .changelog {
+            padding: 50px 20px; /* Espacio alrededor de la sección */
+            background-size: cover; /* Asegura que la imagen cubra todo el fondo */
+            background-position: center; /* Centra la imagen de fondo */
+            border-radius: 5px; /* Bordes redondeados */
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Sombra para profundidad */
+            max-width: 800px; /* Ancho máximo */
+            margin: 20px auto; /* Centra la sección horizontalmente */
+            color: white; /* Color del texto para el contraste */
+            flex: 1; /* Hace que este contenedor ocupe el espacio restante */
+        }
+
+        .changelog h2 {
+            font-size: 28px; /* Tamaño del título */
+            margin-bottom: 20px; /* Espacio debajo del título */
+            color: #ffffff; /* Color del título */
+        }
+
+        .changelog-item {
+            margin-bottom: 20px; /* Espacio debajo de cada item */
+            padding: 15px; /* Espacio interno del item */
+            border: 1px solid rgba(255, 255, 255, 0.5); /* Borde ligero */
+            border-radius: 5px; /* Bordes redondeados */
+            background-color: rgba(0, 0, 0, 0.5); /* Fondo semi-transparente para mayor legibilidad */
+        }
+
+        .changelog-item h3 {
+            font-size: 20px; /* Tamaño del subtítulo */
+            margin-bottom: 10px; /* Espacio debajo del subtítulo */
+        }
+
+        .filter {
+            margin: 20px 0; /* Espacio alrededor del filtro */
+            text-align: center; /* Centra el texto del filtro */
+        }
+
+        footer {
+            background-color: #002673; /* Color del pie de página */
+            color: white; /* Color del texto */
+            padding: 20px; /* Espacio interior del pie de página */
+            text-align: center; /* Centra el texto */
+        }
+
+        footer a {
+            color: white; /* Color del enlace */
+            text-decoration: none; /* Elimina el subrayado */
+        }
+
+        footer a:hover {
+            text-decoration: underline; /* Subrayado al pasar el ratón */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Encabezado -->
+    <header>
+        <h1>Historial de Cambios</h1>
+        <div class="navbar">
+            <button class="menu-button">Menú</button>
+            <div class="menu-content">
+                <a href="index.html">Inicio</a>
+                <a href="mapa.html">Mapa</a>
+                <a href="tablas.html">Tablas</a>
+                <a href="chart.html">Gráficos</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Filtro de fechas -->
+    <div class="filter">
+        <label for="startDate">Desde:</label>
+        <input type="date" id="startDate">
+        <label for="endDate">Hasta:</label>
+        <input type="date" id="endDate">
+        <button onclick="filterChangelog()">Filtrar</button>
+    </div>
+
+    <!-- Sección de Historial de Cambios -->
+    <section class="changelog" id="changelogSection">
+        <h2>Cambios Recientes</h2>
+        <div class="changelog-item" data-date="2024-10-01">
+            <h3>Actualización de Octubre 2024</h3>
+            <p>Se añadió la nueva funcionalidad de gráficos dinámicos y se mejoraron las tablas interactivas.</p>
+        </div>
+        <div class="changelog-item" data-date="2024-09-15">
+            <h3>Actualización de Septiembre 2024</h3>
+            <p>Mejoras en el mapa interactivo con nuevas capas de datos regionales.</p>
+        </div>
+        <div class="changelog-item" data-date="2024-08-05">
+            <h3>Actualización de Agosto 2024</h3>
+            <p>Optimizaciones en la carga de datos y nuevas provincias añadidas.</p>
+        </div>
+    </section>
+
+    <!-- Pie de página -->
+    <footer>
+        <p>&copy; 2024 Servicio de Salud Maule. Todos los derechos reservados.</p>
+        <p>
+            <a href="#">Facebook</a> | 
+            <a href="#">Twitter</a> | 
+            <a href="#">Instagram</a>
+        </p>
+    </footer>
+
+    <!-- JavaScript para el menú y el filtro -->
+    <script>
+        document.querySelector('.menu-button').addEventListener('click', function() {
+            const menu = document.querySelector('.menu-content');
+            menu.style.display = (menu.style.display === 'block') ? 'none' : 'block';
+        });
+
+        // Cerrar el menú si se hace clic fuera de él
+        window.onclick = function(event) {
+            if (!event.target.matches('.menu-button')) {
+                const menu = document.querySelector('.menu-content');
+                if (menu.style.display === 'block') {
+                    menu.style.display = 'none';
+                }
+            }
+        }
+
+        function filterChangelog() {
+            const startDate = new Date(document.getElementById('startDate').value);
+            const endDate = new Date(document.getElementById('endDate').value);
+            const changelogItems = document.querySelectorAll('.changelog-item');
+
+            changelogItems.forEach(item => {
+                const itemDate = new Date(item.getAttribute('data-date'));
+                if (itemDate >= startDate && itemDate <= endDate) {
+                    item.style.display = 'block'; // Muestra el item
+                } else {
+                    item.style.display = 'none'; // Oculta el item
+                }
+            });
+        }
+    </script>
+
+</body>
+</html>

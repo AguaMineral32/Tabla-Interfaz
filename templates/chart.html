@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Servicio de Salud Maule</title>
+    <link rel="stylesheet" href="static\css\header.css">
+    <link rel="stylesheet" href="static\css\graficos.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="menu-wrapper">
+                <button class="menu-button" onclick="toggleMenu()">Menú</button>
+                <div id="menu-content" class="menu-content">
+                    <a href="/">Inicio</a>
+                    <a href="/subida">Tablas</a>
+                    <a href="/mapa">Mapa</a>
+                </div>
+            </div>
+            <div class="logo">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLFLZ6vwitDYKIRg1VrBWdZ3gjevCzeD3wag&s" alt="Logo">
+            </div>
+            <h1>Servicio de Salud Maule</h1>
+            <hr class="divider">
+        </header>
+
+        <main>
+            <section class="upload-section">
+                <input type="file" id="upload" accept=".xlsx, .xls" class="upload-button" />
+            </section>
+
+            <section id="filters" class="filters">
+                <label for="value-column-filter">Selecciona provincia</label>
+                <select id="value-column-filter">
+                    <option value="" disabled selected>-- Selecciona una provincia --</option>
+                    <option value="Cauquenes">Cauquenes</option>
+                    <option value="Curicó">Curicó</option>
+                    <option value="Linares">Linares</option>
+                    <option value="Talca">Talca</option>
+                </select>
+                <br><br>
+                <label for="chart-type">Seleccionar tipo de gráfico</label>
+                <select id="chart-type">
+                    <option value="" disabled selected>-- Selecciona un tipo de grafico --</option>
+                    <option value="bar">Barras</option>
+                    <option value="line">Línea</option>
+                    <option value="pie">Pastel</option>
+                    <option value="doughnut">Dona</option>
+                    <option value="radar">Radar</option>
+                    <option value="Barras,Línea,Pastel,Dona,Radar">Todas las anteriores</option>
+                </select>
+                <br><br>
+                <label for="value-column-filter">Selecciona comuna</label>
+                <select id="value-column-filter">
+                    <option value="" disabled selected>-- Selecciona una comuna --</option>
+                    <option value="Talca">Talca</option>
+                    <option value="Curicó">Curicó</option>
+                    <option value="Linares">Linares</option>
+                    <option value="Cauquenes">Cauquenes</option>
+                    <option value="San Javier">San Javier</option>
+                    <option value="Constitución">Constitución</option>
+                    <option value="Maule">Maule</option>
+                    <option value="Río Claro">Río Claro</option>
+                    <option value="Villa Alegre">Villa Alegre</option>
+                    <option value="Colbún">Colbún</option>
+                    <option value="Teno">Teno</option>
+                    <option value="Empedrado">Empedrado</option>
+                    <option value="San Clemente">San Clemente</option>
+                    <option value="Hualañé">Hualañé</option>
+                    <option value="Retiro">Retiro</option>
+                    <option value="Pelarco">Pelarco</option>
+                    <option value="Putú">Putú</option>
+                    <option value="San Rafael">San Rafael</option>
+                    <option value="Longaví">Longaví</option>
+                    <option value="Parral">Parral</option>
+                    <option value="Sagrada Familia">Sagrada Familia</option>
+                    <option value="Romeral">Romeral</option>
+                    <option value="Rauco">Rauco</option>
+                    <option value="Curepto">Curepto</option>
+                    <option value="San Antonio">San Antonio</option>
+                    <option value="Los Queñes">Los Queñes</option>
+                    <option value="San Vicente">San Vicente</option>
+                    <option value="Rancagua">Rancagua</option>
+                    <option value="Pichidegua">Pichidegua</option>
+                    <option value="Peralillo">Peralillo</option>
+                </select>
+                <br><br>
+                <button id="generate-chart" class="generate-chart-button">Generar Gráfico</button>
+            </section>
+
+            <section class="table-section">
+                <table id="data-table" class="data-table"></table>
+            </section>
+        </main>
+    </div>
+
+    <script src="static\js\script.js"></script>
+</body>
+</html>
