@@ -2,6 +2,7 @@ import folium
 import json
 import sys
 import pandas as pd
+import os
 
 # Cargar los datos de establecimientos
 
@@ -9,7 +10,7 @@ if len(sys.argv) > 1:
     file_path = sys.argv[1]
 else:
     print("No se proporcionó la ruta del archivo.")
-        
+
 #file_path = "Copia de edan_de_ejemplo.xlsx"
 df = pd.read_excel(file_path)
 
@@ -21,7 +22,7 @@ df["longitud_establecimiento"] = df["longitud_establecimiento"].astype(str).str.
 df["operatividad_establecimiento"] = df["operatividad_establecimiento"].str.lower()
 
 # Cargar las comunas de la Región del Maule desde el GeoJSON
-geojson_path = "Comunas_RMaule.geojson"
+geojson_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'Comunas_RMaule.geojson')
 with open(geojson_path, encoding="utf-8") as f:
     comunas_geojson = json.load(f)
 
@@ -103,12 +104,7 @@ for _, row in df.iterrows():
 # Agregar control de capas
 folium.LayerControl().add_to(mapa_maule)
 
-# Guardar el mapa
-mapa_maule.save("templates/mapa_interactivo.html")
-
-# if __name__ == "__main__":
-#     # Obtener la ruta del archivo desde los argumentos pasados
-#     if len(sys.argv) > 1:
-#         archivo_ruta = sys.argv[1]
-#     else:
-#         print("No se proporcionó la ruta del archivo.")
+current_dir = os.path.dirname(os.path.abspath(__file__))  # Directorio del script actual
+ruta_templates = os.path.join(current_dir, 'templates', 'mapa_interactivo.html')
+print(f"Guardando mapa en: {ruta_templates}")  # Imprime la ruta absoluta correcta
+mapa_maule.save(ruta_templates)  # Guarda el archivo en la ruta correcta

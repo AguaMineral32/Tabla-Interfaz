@@ -84,9 +84,9 @@ def tabla_operatividad(archivo):
         for operatividad in tipos_operatividad:
             for tipo_establecimiento in archivo['TIPO_ESTABLECIMIENTO'].unique():
                 # Filtrar el DataFrame por tipo de establecimiento y operatividad
-                df_filtrado = archivo[(archivo['TIPO_ESTABLECIMIENTO'] == tipo_establecimiento) & 
+                df_filtrado = archivo[(archivo['TIPO_ESTABLECIMIENTO'] == tipo_establecimiento) &
                                 (archivo['OPERATIVIDAD_ESTABLECIMIENTO'] == operatividad)]
-                
+
                 # Si el DataFrame no está vacío, proceder
                 if not df_filtrado.empty:
                     columnas = ['NOMBRE_ESTABLECIMIENTO', 'OPERATIVIDAD_ESTABLECIMIENTO']
@@ -133,16 +133,16 @@ def eliminar_guiones_bajos(texto):
     return texto
 
 def limpiar_df(_df_):
-    _df_ = _df_.fillna('NOINFO')  
-    _df_.columns = [col.upper() for col in _df_.columns]  
-    _df_.columns = _df_.columns.map(remove_accents)  
-    _df_ = _df_.map(remove_accents)  
-    _df_ = _df_.map(lambda x: x.upper() if isinstance(x, str) else x)  
-    _df_ = _df_.map(convert_to_string)  
-    _df_ = _df_.replace(' ', '_', regex=True)  
-    _df_.columns = _df_.columns.str.replace(' ', '_', regex=False)  
-    _df_ = _df_.map(eliminar_guiones_bajos)  
-    _df_.columns = _df_.columns.str.strip('_')  
+    _df_ = _df_.fillna('NOINFO')
+    _df_.columns = [col.upper() for col in _df_.columns]
+    _df_.columns = _df_.columns.map(remove_accents)
+    _df_ = _df_.map(remove_accents)
+    _df_ = _df_.map(lambda x: x.upper() if isinstance(x, str) else x)
+    _df_ = _df_.map(convert_to_string)
+    _df_ = _df_.replace(' ', '_', regex=True)
+    _df_.columns = _df_.columns.str.replace(' ', '_', regex=False)
+    _df_ = _df_.map(eliminar_guiones_bajos)
+    _df_.columns = _df_.columns.str.strip('_')
     return _df_
 
 def obtener_provincia(Nombre_Comuna):
@@ -180,7 +180,7 @@ def obtener_tipo(NOMBRE_ESTABLECIMIENTO):
         return 'CENTRO_REGULADOR_SAMU'
     else:
         return 'TIPO_NO_ESPECIFICADO'
-    
+
 def delete_uploaded_files():
     upload_folder = os.path.join(os.path.dirname(__file__), 'uploads')
     if not os.path.exists(upload_folder):
@@ -198,12 +198,18 @@ def delete_map():
     templates_folder = os.path.join(os.path.dirname(__file__), 'templates')
     mapa_file = os.path.join(templates_folder, 'mapa_interactivo.html')
 
+    print(f"Ruta de la carpeta templates: {templates_folder}")
+    print(f"Ruta del archivo mapa_interactivo.html: {mapa_file}")
+
     if os.path.exists(mapa_file):
         try:
             os.remove(mapa_file)
             print(f'Archivo mapa_interactivo.html eliminado de templates')
         except Exception as e:
             print(f'Error al eliminar mapa_interactivo.html: {e}')
+    else:
+        print(f"El archivo mapa_interactivo.html no existe en la ruta especificada.")
+
 
 # Hook para ejecutar antes de cada solicitud
 @app.before_request
@@ -213,6 +219,13 @@ def before_request():
         delete_uploaded_files()
     if request.method in ['GET', 'HEAD'] and not request.path.startswith('/mostrar_mapa'):
         delete_map()
+
+@app.after_request
+def add_header(response):
+    response.headers["Cache-Control"] = "no-store, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
 
 # Cargar y preparar los datos al iniciar la aplicación
 custom_df = pd.DataFrame()  # Variable para almacenar la tabla filtrada
@@ -259,7 +272,7 @@ def upload_file():
         eventos_set = set()  # Usamos un conjunto para eliminar duplicados
         codigo_eventos_set = set()  # Usamos un conjunto para eliminar duplicados
         tablaOperatividad = False
-        tablaAfectacionC = False    
+        tablaAfectacionC = False
         hora_inicio = int(request.form.get('horaInicio', 0))
         hora_fin = int(request.form.get('horaFin', 23))
         hora_inicio = time(hora_inicio,0)
@@ -302,7 +315,7 @@ def upload_file():
             custom_df = pd.concat([custom_df, df], ignore_index=True)
 
         custom_df_original = custom_df.copy()
-        
+
         # Generar tablas y almacenarlas en la sesión
         tablas_Operatividad = tabla_operatividad(custom_df) if tablaOperatividad else {}
         tablasAfectacionC = crear_tabla_comunas1(custom_df) if tablaAfectacionC else {} #({}, {})
@@ -348,7 +361,7 @@ def upload_file():
         session['tablas'].update(tabla_alcantarillado)
         session['tablas'].update(tabla_pabellones)
         session['tablas'].update(tabla_bodegas)
-        session['tablas'].update(tabla_urgencias)  
+        session['tablas'].update(tabla_urgencias)
         session['tablas'].update(tabla_vehiculos)
         session['tablas'].update(tabla_boxes)
         session['tablas'].update(tabla_sapu)
@@ -360,10 +373,10 @@ def upload_file():
         session['tablas'].update(tabla_camas)
         session['tablas'].update(tabla_UPC)
         session.modified = True  # 🔥 Fuerza a Flask a guardar la sesión
-        listaTablas = [tablaOperatividad,tablaAfectacionC,tabla_pabellones, tabla_energia, tabla_gases, 
+        listaTablas = [tablaOperatividad,tablaAfectacionC,tabla_pabellones, tabla_energia, tabla_gases,
                        tabla_vias, tabla_provincia, tabla_bodegas,tabla_urgencias,
-                       tabla_alcantarillado,tabla_agua,tabla_vehiculos, tabla_boxes, tabla_sapu, 
-                       tabla_servicios, tabla_medicamentos, tabla_farmacia, tabla_rrhh, 
+                       tabla_alcantarillado,tabla_agua,tabla_vehiculos, tabla_boxes, tabla_sapu,
+                       tabla_servicios, tabla_medicamentos, tabla_farmacia, tabla_rrhh,
                        tabla_teleco, tabla_vacunas, tabla_camas, tabla_UPC,tabla_samu,tabla_evacuacion,tabla_consultas,
                        tablasAfectacionC2,tablasAfectacionC3]
         tablaContainer = any(listaTablas)
@@ -376,7 +389,7 @@ def upload_file():
             'tablaContainer': tablaContainer,
             'eventos': list(eventos_set),  # Convertimos el conjunto en lista
             'codigo_eventos': list(codigo_eventos_set)  # Convertimos el conjunto en lista
-            
+
         }), 200
 
     except Exception as e:
@@ -492,14 +505,20 @@ def download_filtered():
 
 def crear_mapa(mapa):
     try:
-        delete_map()
-        subprocess.run(["python", "mapas.py", mapa], check=True)
+        ruta_mapas = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'mapas.py')
+        print(f"Ejecutando el script mapas.py con el archivo: {mapa}")
+        result = subprocess.run(["python", ruta_mapas, mapa], check=True, capture_output=True, text=True)
+        print("El script mapas.py se ejecutó correctamente.")
+        print(f"Salida del script: {result.stdout}")
     except subprocess.CalledProcessError as e:
         print(f"Error al ejecutar mapas.py: {e}")
+        print(f"Salida de error: {e.stderr}")
+
 
 @app.route('/upload_mapa', methods=['POST'])
 def upload_mapa():
     try:
+        delete_map()
         uploaded_files = request.files.getlist('files[]')
         if not uploaded_files or all(file.filename == '' for file in uploaded_files):
             return jsonify({'error': 'No se subieron archivos.'}), 400
@@ -511,16 +530,13 @@ def upload_mapa():
             crear_mapa(filepath)
 
         return jsonify({'message': 'Archivo(s) subido(s) exitosamente!'}), 200
-        
+
     except Exception as e:
         return jsonify({'error': f'Ocurrió un error al procesar los archivos: {str(e)}'}), 500
-    
+
 @app.route('/mostrar_mapa')
 def mostrar_mapa():
-    try:
-        return render_template('mapa_interactivo.html')
-    except Exception as e:
-        return jsonify({'error': 'No se pudo cargar el mapa.'}), 500
+    return send_file('templates/mapa_interactivo.html')
 
 if __name__ == '__main__':
     if not os.path.exists(app.config['UPLOAD_FOLDER']):
